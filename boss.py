@@ -4,7 +4,18 @@ WEBHOOK = "https://discord.com/api/webhooks/1477929350039863409/8xQdOT50K72u1xHM
 DATA_URL = "https://undergroundz18-ugz.github.io/Boss-Respawn-Timer/data.json"
 
 response = requests.get(DATA_URL)
-data = response.json()
+
+if response.status_code != 200:
+    print("Failed to fetch data:", response.status_code)
+    print(response.text)
+    exit(1)
+
+try:
+    data = response.json()
+except Exception as e:
+    print("JSON Error:", e)
+    print(response.text)
+    exit(1)
 
 message = "Boss Respawn Update\n\n"
 
