@@ -1,33 +1,28 @@
 import requests
+from bs4 import BeautifulSoup
 
-WEBHOOK = "https://discord.com/api/webhooks/1477929350039863409/8xQdOT50K72u1xHMyVgjY2m6Onodm9iWBcUfEGhZYAtEMlS36Gbe3EJbookCp4VqawDL"
-DATA_URL = "https://raw.githubusercontent.com/undrgroundz18-ugz/Boss-Respawn-Timer/master/data.json"
+# Website URL
+URL = "https://undrgroundz18-ugz.github.io/Boss-Respawn-Timer/"
 
-response = requests.get(DATA_URL)
+# Your Discord webhook
+WEBHOOK_URL = "https://discord.com/api/webhooks/1477929350039863409/8xQdOT50K72u1xHMyVgjY2m6Onodm9iWBcUfEGhZYAtEMlS36Gbe3EJbookCp4VqawDL"
 
+# Fetch website
+response = requests.get(URL)
 if response.status_code != 200:
-    print("Failed to fetch data:", response.status_code)
-    print(response.text)
+    print("Failed to fetch website:", response.status_code)
     exit(1)
 
-try:
-    data = response.json()
-except Exception as e:
-    print("JSON Error:", e)
-    print(response.text)
-    exit(1)
+# Parse HTML
+soup = BeautifulSoup(response.text, "html.parser")
 
-message = "Boss Respawn Update\n\n"
+# Get visible text
+page_text = soup.get_text()
 
-for boss in data:
-    name = boss.get("name", "Unknown")
-    status = boss.get("status", "Unknown")
-    respawn = boss.get("respawn", "Unknown")
-    countdown = boss.get("countdown", "Unknown")
+# For now, send entire page text (we'll refine after)
+message = page_text[:1500]  # Discord limit safety
 
-    message += f"**{name}**\n"
-    message += f"Status: {status}\n"
-    message += f"Respawn: {respawn}\n"
-    message += f"Countdown: {countdown}\n\n"
+# Send to Discord
+requests.post(WEBHOOK_URL, json={"content": message})
 
-requests.post(WEBHOOK, json={"content": message})
+print("Posted to Discord successfully!")
