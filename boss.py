@@ -1,7 +1,7 @@
 import requests
 
 WEBHOOK = "https://discord.com/api/webhooks/1477929350039863409/8xQdOT50K72u1xHMyVgjY2m6Onodm9iWBcUfEGhZYAtEMlS36Gbe3EJbookCp4VqawDL"
-DATA_URL = "https://raw.githubusercontent.com/undrgroundz18-ugz/Boss-Respawn-Timer/main/data.json"
+DATA_URL = "https://raw.githubusercontent.com/undrgroundz18-ugz/Boss-Respawn-Timer/master/data.json"
 
 response = requests.get(DATA_URL)
 
