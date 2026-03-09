@@ -1,16 +1,14 @@
 import requests
 
 DATA_URL = "https://undrgroundz18-ugz.github.io/Boss-Respawn-Timer/data.json"
-
 WEBHOOK_URL = "https://discord.com/api/webhooks/1480494683321794661/_EZMPjLT52NPKcZbBROQNuW9MQpF4jUqe98z6rrijMaaFKpx7OzKzx8uUqvSDwHrg8XW"
-
 
 response = requests.get(DATA_URL)
 data = response.json()
 
 message = "🔥 **Boss Respawn Timer** 🔥\n\n"
 
-for boss in data:
+for boss in data["bosses"]:
     name = boss.get("name", "Unknown")
     location = boss.get("location", "Unknown")
     respawn = boss.get("respawn", "Unknown")
