@@ -1,36 +1,22 @@
 import requests
-from bs4 import BeautifulSoup
 
-URL = "https://undrgroundz18-ugz.github.io/Boss-Respawn-Timer/"
+DATA_URL = "https://undrgroundz18-ugz.github.io/Boss-Respawn-Timer/data.json"
+
 WEBHOOK_URL = "https://discord.com/api/webhooks/1480494683321794661/_EZMPjLT52NPKcZbBROQNuW9MQpF4jUqe98z6rrijMaaFKpx7OzKzx8uUqvSDwHrg8XW"
 
-response = requests.get(URL)
 
-if response.status_code != 200:
-    print("Failed to fetch website:", response.status_code)
-    exit()
+response = requests.get(DATA_URL)
+data = response.json()
 
-soup = BeautifulSoup(response.text, "html.parser")
+message = "🔥 **Boss Respawn Timer** 🔥\n\n"
 
-# Try to extract boss table rows
-bosses = []
+for boss in data:
+    name = boss.get("name", "Unknown")
+    location = boss.get("location", "Unknown")
+    respawn = boss.get("respawn", "Unknown")
 
-rows = soup.find_all("tr")
-
-for row in rows:
-    cols = row.find_all("td")
-    if len(cols) >= 3:
-        boss_name = cols[0].get_text(strip=True)
-        status = cols[1].get_text(strip=True)
-        respawn = cols[2].get_text(strip=True)
-
-        bosses.append(f"⚔️ {boss_name} | {status} | {respawn}")
-
-if not bosses:
-    message = "❌ No boss data found (site may load with JavaScript)."
-else:
-    message = "**🔥 Boss Respawn Today 🔥**\n\n" + "\n".join(bosses[:20])
+    message += f"⚔️ **{name}** - {location}\n⏰ {respawn}\n\n"
 
 requests.post(WEBHOOK_URL, json={"content": message})
 
-print("Posted to Discord!")
+print("Posted boss list to Discord!")
